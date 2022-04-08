@@ -24,8 +24,27 @@ public class ClickToMove : MonoBehaviour
         }
 
         ClickMove();
+        
+        ChangeAreaSpeed();
     }
 
+    void ChangeAreaSpeed()
+    {
+        NavMeshHit navHit;
+        m_Agent.SamplePathPosition(-1, 0.0f, out navHit);
+
+        int GrassMask = 1 << NavMesh.GetAreaFromName("Tall Grass");
+
+        if (navHit.mask == GrassMask)
+        {
+            m_Agent.speed = 3f;
+        }
+        else
+        {
+            m_Agent.speed = 30f;
+        }
+    }
+    
     void RandomMove()
     {
         if (m_Agent.remainingDistance < 0.1f)
