@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.AI;
 
 // Use physics raycast hit from mouse click to set agent destination
+
+/// <summary>
+/// 
+/// </summary>
 [RequireComponent(typeof(NavMeshAgent))]
 public class ClickToMove : MonoBehaviour
 {
@@ -10,10 +14,19 @@ public class ClickToMove : MonoBehaviour
 
     [SerializeField] bool _isRandomPosition = false;
     [SerializeField] float _randomDistanceRadius = 10f;
+              
+    [SerializeField] private float _speed = 3f;
+    [SerializeField] private float _grassSpeed = 1.5f;
+              
+    [SerializeField] private float _walkThreshold = 0.01f;
+    [SerializeField] private Animator _anim;
+
 
     void Start()
     {
         m_Agent = GetComponent<NavMeshAgent>();
+        _anim = GetComponentInChildren<Animator>(); //Assuming there is one Animator in all childern
+
     }
 
     void Update()
@@ -26,6 +39,23 @@ public class ClickToMove : MonoBehaviour
         ClickMove();
         
         ChangeAreaSpeed();
+
+        UpdateAnimator();
+    }
+
+    /// <summary>
+    /// Plays idle or walk animation based on speed
+    /// </summary>
+    void UpdateAnimator()
+    {
+        if(m_Agent.velocity.magnitude < _walkThreshold)
+        {
+            _anim.SetBool("isWalking", false);
+        }
+        else
+        {
+            _anim.SetBool("isWalking", true);
+        }
     }
 
     void ChangeAreaSpeed()
@@ -37,11 +67,11 @@ public class ClickToMove : MonoBehaviour
 
         if (navHit.mask == GrassMask)
         {
-            m_Agent.speed = 3f;
+            m_Agent.speed = _grassSpeed;
         }
         else
         {
-            m_Agent.speed = 30f;
+            m_Agent.speed = _speed;
         }
     }
     
