@@ -65,13 +65,15 @@ public class ClickToMove : MonoBehaviour
 
         int GrassMask = 1 << NavMesh.GetAreaFromName("Tall Grass");
 
-        if (navHit.mask == GrassMask)
+        int filtered = navHit.mask & GrassMask;
+
+        if (filtered == 0)
         {
-            m_Agent.speed = _grassSpeed;
+            m_Agent.speed = _speed;
         }
         else
         {
-            m_Agent.speed = _speed;
+            m_Agent.speed = _grassSpeed;
         }
     }
     
